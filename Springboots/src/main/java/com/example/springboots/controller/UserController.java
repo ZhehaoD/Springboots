@@ -7,13 +7,13 @@ import com.example.springboots.entity.User;
 import com.example.springboots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+
 
 public class UserController
 {
@@ -79,7 +79,7 @@ public class UserController
                                @RequestParam Integer pageSize,
                                @RequestParam String username,
                                @RequestParam String name){
-        userService.selectByPage(pageNum, pageSize, username, name)
-        return Result.success(pageMap);
+        userService.selectByPage(pageNum, pageSize, username, name);
+        return Result.success();
     }
 }

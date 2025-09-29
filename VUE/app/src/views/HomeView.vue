@@ -85,22 +85,43 @@
           <div style="box-shadow: 0 0 10px rgba(0,0,0,.1); padding: 10px 20px; border-radius: 5px; margin-bottom: 10px">
             早安，骚年，祝你开心每一天！
           </div>
-          <el-card style="width: 500px">
-            <div class="clearfix">
-              <span>毕设2025</span>
-            </div>
-            <div>
-              2025毕设正式开始了！
-              <div style="margin-top: 20px">
-                <div style="margin: 10px 0"><strong>主题色</strong></div>
-                <el-button type="primary">按钮</el-button>
-                <el-button type="success">按钮</el-button>
-                <el-button type="warning">按钮</el-button>
-                <el-button type="danger">按钮</el-button>
-                <el-button type="info">按钮</el-button>
+
+          <div style="display: flex">
+            <el-card style="width: 50%; margin-right: 10px">
+              <template v-slot:header>
+                <div class="clearfix">
+                  <span>毕设2025</span>
+                </div>
+              </template>
+              <div>
+                2025毕设正式开始了！
+                <div style="margin-top: 20px">
+                  <div style="margin: 10px 0"><strong>主题色</strong></div>
+                  <el-button type="primary">按钮</el-button>
+                  <el-button type="success">按钮</el-button>
+                  <el-button type="warning">按钮</el-button>
+                  <el-button type="danger">按钮</el-button>
+                  <el-button type="info">按钮</el-button>
+                </div>
               </div>
-            </div>
-          </el-card>
+            </el-card>
+
+            <el-card style="width: 50%">
+              <template v-slot:header>
+                <div class="clearfix">
+                  <span>渲染用户数据</span>
+                </div>
+              </template>
+              <div>
+                <el-table :data="users">
+                  <el-table-column label="ID" prop="id"></el-table-column>
+                  <el-table-column label="用户名" prop="username"></el-table-column>
+                  <el-table-column label="姓名" prop="name"></el-table-column>
+                  <el-table-column label="地址" prop="address"></el-table-column>
+                </el-table>
+              </div>
+            </el-card>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -109,6 +130,7 @@
 
 <script>
 import {House, Menu,Expand,Fold,FullScreen} from "@element-plus/icons-vue";
+import axios from 'axios';
 
 export default ({
   name:"HomeView",
@@ -116,7 +138,17 @@ export default ({
     return {
       isCollapse:false,
       asideWidth:'200px',
+      users:[]
     }
+  },
+  mounted() {
+    axios.get('http://localhost:8080/user/selectAll')
+        .then(response => {
+          console.log('请求成功', response);
+        })
+        .catch(error => {
+          console.error('请求失败', error);
+        });
   },
   methods:{
     handleFull(){

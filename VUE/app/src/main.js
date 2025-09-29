@@ -5,7 +5,8 @@ import router from './router'
 import ElementPlus from 'element-plus'
 // 引入 Element Plus 样式
 import 'element-plus/dist/index.css'
-
+import axios from "axios";
+axios.defaults.withCredentials = true;
 const app = createApp(App)
 
 // 使用 Element Plus
