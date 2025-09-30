@@ -2,18 +2,30 @@ package com.example.springboots.controller;
 
 
 import com.example.springboots.common.Result;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.springboots.entity.User;
+import com.example.springboots.service.UserService;
+import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * 功能: 提供接口返回数据
- **/
 
 @RestController
-public class WebController {
 
-    @RequestMapping
-    public Result hello(){
-        return Result.success("hello world");
+
+public class WebController {
+    @Resource
+    UserService userService;
+
+    @GetMapping("/")
+    public Result hello() {
+        return Result.success("success");
+    }
+
+    @PostMapping("/login")
+    public Result login(@RequestBody User user) {
+        if(user.getUsername()==null || user.getUsername().isEmpty()){
+            return Result.error("数据输入不合法");
+        }
+        user = userService.login(user);
+        return Result.success(user);
     }
 }

@@ -130,7 +130,7 @@
 
 <script>
 import {House, Menu,Expand,Fold,FullScreen} from "@element-plus/icons-vue";
-import axios from 'axios';
+import request from '@/utils/request';
 
 export default ({
   name:"HomeView",
@@ -142,13 +142,17 @@ export default ({
     }
   },
   mounted() {
-    axios.get('http://localhost:8080/user/selectAll')
-        .then(response => {
-          console.log('请求成功', response);
-        })
-        .catch(error => {
-          console.error('请求失败', error);
-        });
+    // axios.get('http://localhost:8080/user/selectAll')
+    //     .then(res => {
+    //       console.log('请求成功', res.data);
+    //       this.users=res.data.data
+    //     })
+    //     .catch(error => {
+    //       console.error('请求失败', error);
+    //     });
+    request.get('user/selectAll').then(res=>{
+      this.users = res.data
+    })
   },
   methods:{
     handleFull(){

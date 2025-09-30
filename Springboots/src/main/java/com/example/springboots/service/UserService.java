@@ -3,6 +3,7 @@ package com.example.springboots.service;
 
 import com.example.springboots.common.Page;
 import com.example.springboots.entity.User;
+import com.example.springboots.exception.ServiceException;
 import com.example.springboots.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,5 +64,17 @@ public class UserService {
         page.setTotal(total);
         page.setList(userList);
         return page;
+    }
+
+    public User login(User user) {
+        //根据用户名查询数据库的用户信息
+        User dbUser = userMapper.selectByUsername(user.getUsername());
+        if(dbUser==null){
+            throw new ServiceException("用户名或密码错误");
+        }
+        if(!user.getPassword().equals(dbUser.getPassword())){
+            throw new ServiceException("用户名或密码错误");
+        }
+        return dbUser;
     }
 }

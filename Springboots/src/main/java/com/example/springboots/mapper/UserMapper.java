@@ -51,5 +51,7 @@ public interface UserMapper {
             "  AND (username LIKE '%' || #{username} || '%' OR #{username} IS NULL)")
     int selectCountByPage(@Param("username") String username, @Param("name") String name);
 
+    @Select("select * from \"user\" where username =#{username} order by id desc")
+    User selectByUsername(String username);
 }
 
