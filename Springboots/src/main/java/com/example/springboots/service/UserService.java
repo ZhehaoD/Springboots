@@ -1,6 +1,7 @@
 package com.example.springboots.service;
 
 
+import ch.qos.logback.core.testUtil.RandomUtil;
 import com.example.springboots.common.Page;
 import com.example.springboots.entity.User;
 import com.example.springboots.exception.ServiceException;
@@ -76,5 +77,15 @@ public class UserService {
             throw new ServiceException("用户名或密码错误");
         }
         return dbUser;
+    }
+
+    public User register(User user) {
+        User dbUser = userMapper.selectByUsername(user.getUsername());
+        if(dbUser != null){
+            throw new ServiceException("用户名已存在");
+        }
+        user.setName(user.getUsername());
+        userMapper.insert(user);
+        return user;
     }
 }
