@@ -76,6 +76,9 @@ public class UserService {
         if(!user.getPassword().equals(dbUser.getPassword())){
             throw new ServiceException("用户名或密码错误");
         }
+        String token= com.example.springboot.utils.TokenUtils.createToken(dbUser.getId().toString(),dbUser.getPassword());
+        dbUser.setToken(token);
+        System.out.println(dbUser);
         return dbUser;
     }
 

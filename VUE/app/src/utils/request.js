@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from "@/router";
 
 const request = axios.create({
     baseURL: 'http://localhost:8080',
@@ -12,11 +13,11 @@ request.interceptors.request.use(
     config => {
         config.headers['Content-Type'] = 'application/json;charset=utf-8';
         // 从localStorage获取用户信息并设置token请求头
-        const userStr = localStorage.getItem("user");
-        if (userStr) {
-            const user = JSON.parse(userStr);
-            config.headers['token'] = user.token; // 设置请求头
+        let user =JSON.parse(localStorage.getItem("honey-user"));
+        if(user){
+            config.headers['token'] = user.data.token; // 设置请求头
         }
+
         return config;
     },
     error => {
@@ -34,6 +35,9 @@ request.interceptors.response.use(
         // 兼容服务端返回的字符串数据
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res;
+        }
+        if (res.code === '401'){
+            router.push('login')
         }
         return res;
     },
