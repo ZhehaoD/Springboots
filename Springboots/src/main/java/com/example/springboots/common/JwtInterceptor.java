@@ -9,6 +9,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.springboots.entity.User;
 import com.example.springboots.exception.ServiceException;
 import com.example.springboots.mapper.UserMapper;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,12 @@ public class JwtInterceptor implements HandlerInterceptor {
             token = request.getParameter("token");
         }
 
+        if(handler instanceof HandlerMethod) {
+            AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);
+            if (annotation != null) {
+                return true;
+            }
+        }
         // 执行认证
         if (StrUtil.isBlank(token)) {
             throw new ServiceException("401", "请登录");

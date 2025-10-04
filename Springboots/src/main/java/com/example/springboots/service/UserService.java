@@ -2,6 +2,7 @@ package com.example.springboots.service;
 
 
 import ch.qos.logback.core.testUtil.RandomUtil;
+import com.example.springboots.common.AuthAccess;
 import com.example.springboots.common.Page;
 import com.example.springboots.entity.User;
 import com.example.springboots.exception.ServiceException;
@@ -67,7 +68,7 @@ public class UserService {
         page.setList(userList);
         return page;
     }
-
+    @AuthAccess
     public User login(User user) {
         //根据用户名查询数据库的用户信息
         User dbUser = userMapper.selectByUsername(user.getUsername());

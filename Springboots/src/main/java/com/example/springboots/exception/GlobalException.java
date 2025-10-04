@@ -14,4 +14,11 @@ public class GlobalException {
     public Result serviceException(ServiceException e){
         return Result.error(e.getCode(), e.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public Result Globalexception(Exception e){
+        e.printStackTrace();
+        return Result.error("500", "系统错误");
+    }
 }
