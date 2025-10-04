@@ -87,7 +87,7 @@
           </div>
 
           <div style="display: flex">
-            <el-card style="width: 50%; margin-right: 10px">
+            <el-card style="width: 30%; margin-right: 10px">
               <template v-slot:header>
                 <div class="clearfix">
                   <span>毕设2025</span>
@@ -106,7 +106,7 @@
               </div>
             </el-card>
 
-            <el-card style="width: 50%">
+            <el-card style="width: 70%">
               <template v-slot:header>
                 <div class="clearfix">
                   <span>渲染用户数据</span>
@@ -118,8 +118,66 @@
                   <el-table-column label="用户名" prop="username"></el-table-column>
                   <el-table-column label="姓名" prop="name"></el-table-column>
                   <el-table-column label="地址" prop="address"></el-table-column>
+                  <el-table-column label="文件上传">
+                    <template v-slot="scope">
+                      <el-upload
+                          action="http://localhost:8080/file/upload"
+                          :headers="{token: user.data.token}"
+                          :show-file-list="false"
+                          :on-success="(row, file) => handleTableFileUpload(scope.row, file)"
+                      >
+                        <el-button type="primary" size="mini">上传文件</el-button>
+                      </el-upload>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="文件上传">
+                    <template v-slot="scope">
+                     <el-image v-if="scope.row.avatar" :src="scope.row.avatar" style="width: 50px; height: 50px"></el-image>
+                      <div><el-button type="primary" @click="preview(scope.row.avatar)">下载文件</el-button></div>
+                    </template>
+
+                  </el-table-column>
                 </el-table>
               </div>
+            </el-card>
+          </div>
+          <div style ="display: flex; margin: 10px 10px 10px 0px">
+            <el-card style="width: 50%">
+              <template v-slot:header>
+                <div class="clearfix">
+                  <span>文件上传下载</span>
+                </div>
+              </template>
+                <div>
+                  <el-upload
+                        action="http://localhost:8080/file/upload"
+                        :headers="{token: user.data.token}"
+                        list-type="picture"
+                        :on-success="handleFileUpload"
+                    >
+                      <el-button type="primary">单文件上传</el-button>
+                      <template #tip>
+                        <div class="el-upload__tip">
+                          jpg/png files with a size less than 500KB.
+                        </div>
+                      </template>
+                  </el-upload>
+
+                  <el-upload
+                      action="http://localhost:8080/file/upload"
+                      :headers="{token: user.data.token}"
+                      :on-success="handleMultipleFileUpload"
+                      multiple
+                  >
+                    <el-button type="primary">多文件上传</el-button>
+                    <template #tip>
+                      <div class="el-upload__tip">
+                        jpg/png files with a size less than 500KB.
+                      </div>
+                    </template>
+                  </el-upload>
+                </div>
+
             </el-card>
           </div>
         </el-main>
@@ -138,23 +196,21 @@ export default ({
     return {
       isCollapse:false,
       asideWidth:'200px',
-      users:[]
+      users:[],
+      user:JSON.parse(localStorage.getItem('honey-user') || '{}'),
+      URL:'',
+      URLS:[]
     }
   },
   mounted() {
-    // axios.get('http://localhost:8080/user/selectAll')
-    //     .then(res => {
-    //       console.log('请求成功', res.data);
-    //       this.users=res.data.data
-    //     })
-    //     .catch(error => {
-    //       console.error('请求失败', error);
-    //     });
     request.get('user/selectAll').then(res=>{
       this.users = res.data
     })
   },
   methods:{
+    preview(url){
+      window.open(url)
+    },
     handleFull(){
       document.documentElement.requestFullscreen()
     },
@@ -165,6 +221,27 @@ export default ({
     logout(){
       localStorage.removeItem('honey-user')
       this.$router.push('/login')
+    },
+    handleFileUpload(response, file, fileList){
+      this.fileList = fileList
+      console.log(fileList)
+
+    },
+    handleTableFileUpload(row, file){
+      row.avatar = file.response.data
+      request.put('/user/update',row).then(res => {
+        if (res.code ==='200'){
+          this.$message.success('上传成功')
+        }else{
+          this.$message.error('上传失败')
+        }
+      })
+    },
+    handleMultipleFileUpload(response, file, fileList){
+      this.urls = fileList.map(v=>v.response?.data)
+    },
+    showUrls(){
+      console.log(this.urls)
     }
   },
   components: {Menu, House,Expand,Fold,FullScreen}

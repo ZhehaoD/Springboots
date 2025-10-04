@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 @RestController
 
@@ -21,7 +22,6 @@ public class FileController {
     String ip;
 
     private static final String ROOT_PATH = System.getProperty("user.dir") + File.separator + "files";
-    @AuthAccess
     @PostMapping("/upload")
     public Result upload(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();//文件原始名称
@@ -44,6 +44,7 @@ public class FileController {
     @GetMapping("/download/{filename}")
     @AuthAccess
     public void download(@PathVariable String filename, HttpServletResponse response) throws IOException {
+        response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
         String filePath = ROOT_PATH + File.separator + filename;
         if(!FileUtil.exist(filePath)){
             return;
