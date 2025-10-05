@@ -7,8 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Insert("INSERT INTO \"user\" (username, password, name, phone, email, address, avatar) " +
-            "VALUES (#{username}, #{password}, #{name}, #{phone}, #{email}, #{address}, #{avatar})")
+    @Insert("INSERT INTO \"user\" (username, password, name, phone, email, address, avatar, role) " +
+            "VALUES (#{username}, #{password}, #{name}, #{phone}, #{email}, #{address}, #{avatar}, #{role})")
     void insert(User user);
 
     @Update("update \"user\" set username = #{username}, password = #{password}, name= #{name}, phone =#{phone}," +

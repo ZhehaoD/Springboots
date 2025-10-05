@@ -32,6 +32,12 @@
               </template>
             </el-input>
           </el-form-item>
+          <el-form-item prop="role">
+            <el-radio-group v-model="user.role">
+              <el-radio label="用户"></el-radio>
+              <el-radio label="管理员"></el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" style="width: 100%" @click="register">注 册</el-button>
           </el-form-item>
@@ -76,6 +82,10 @@ export default {
         ],
         confirmPass:[
           {validator: validatePassword, trigger:'blur'}
+        ],
+        role:[
+          { required:true, message:'请选择角色', trigger:'blur' },
+
         ]
       }
     }

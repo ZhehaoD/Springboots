@@ -16,33 +16,23 @@
           <span class="logo" v-show="!isCollapse">honey2025</span>
         </div>
         <el-menu  :collapse="isCollapse" :collapse-transition="false" router style="border: none" :default-active="$route.path" background-color="#001529" text-color="rgba(255,255,255,0.65)" active-text-color="#fff" >
-          <el-menu-item index="/">
+          <el-menu-item index="/home">
             <el-icon><House /></el-icon>
             <span>系统首页</span>
           </el-menu-item>
-          <el-menu-item index="/1">
-            <el-icon><House /></el-icon>
-            <span>系统首页</span>
-          </el-menu-item>
-          <el-menu-item index="/2">
-            <el-icon><House /></el-icon>
-            <span>系统首页</span>
-          </el-menu-item>
-          <el-sub-menu>
+          <el-sub-menu index="info" v-if="user.data.role === '管理员'">
             <!-- 正确的插槽使用方式，v-slot:title 表示使用名为 title 的插槽 -->
             <template v-slot:title>
               <el-icon><Menu /></el-icon>
               <span>信息管理</span>
             </template>
-            <el-menu-item  index="/">用户信息</el-menu-item>
-            <el-menu-item>管理员信息</el-menu-item>
+            <el-menu-item  index="/user">用户信息</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>
       <el-container>
         <!-- 头部区域 -->
         <el-header>
-
           <el-icon style="font-size: 35px; cursor: pointer;" @click="handleCollapse">
             <!-- 根据折叠状态动态显示不同图标 -->
             <template v-if="isCollapse">
@@ -67,7 +57,7 @@
                     style="width: 40px; height: 40px; cursor: default"
                 alt="用户头像"
                 >
-                <span>管理员</span>
+                <span>{{user.data.name}}</span>
               </div>
               <template v-slot:dropdown>
                 <el-dropdown-menu>
@@ -82,104 +72,7 @@
 
         <!-- 主体区域 -->
         <el-main>
-          <div style="box-shadow: 0 0 10px rgba(0,0,0,.1); padding: 10px 20px; border-radius: 5px; margin-bottom: 10px">
-            早安，骚年，祝你开心每一天！
-          </div>
-
-          <div style="display: flex">
-            <el-card style="width: 30%; margin-right: 10px">
-              <template v-slot:header>
-                <div class="clearfix">
-                  <span>毕设2025</span>
-                </div>
-              </template>
-              <div>
-                2025毕设正式开始了！
-                <div style="margin-top: 20px">
-                  <div style="margin: 10px 0"><strong>主题色</strong></div>
-                  <el-button type="primary">按钮</el-button>
-                  <el-button type="success">按钮</el-button>
-                  <el-button type="warning">按钮</el-button>
-                  <el-button type="danger">按钮</el-button>
-                  <el-button type="info">按钮</el-button>
-                </div>
-              </div>
-            </el-card>
-
-            <el-card style="width: 70%">
-              <template v-slot:header>
-                <div class="clearfix">
-                  <span>渲染用户数据</span>
-                </div>
-              </template>
-              <div>
-                <el-table :data="users">
-                  <el-table-column label="ID" prop="id"></el-table-column>
-                  <el-table-column label="用户名" prop="username"></el-table-column>
-                  <el-table-column label="姓名" prop="name"></el-table-column>
-                  <el-table-column label="地址" prop="address"></el-table-column>
-                  <el-table-column label="文件上传">
-                    <template v-slot="scope">
-                      <el-upload
-                          action="http://localhost:8080/file/upload"
-                          :headers="{token: user.data.token}"
-                          :show-file-list="false"
-                          :on-success="(row, file) => handleTableFileUpload(scope.row, file)"
-                      >
-                        <el-button type="primary" size="mini">上传文件</el-button>
-                      </el-upload>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="文件上传">
-                    <template v-slot="scope">
-                     <el-image v-if="scope.row.avatar" :src="scope.row.avatar" style="width: 50px; height: 50px"></el-image>
-                      <div><el-button type="primary" @click="preview(scope.row.avatar)">下载文件</el-button></div>
-                    </template>
-
-                  </el-table-column>
-                </el-table>
-              </div>
-            </el-card>
-          </div>
-          <div style ="display: flex; margin: 10px 10px 10px 0px">
-            <el-card style="width: 50%">
-              <template v-slot:header>
-                <div class="clearfix">
-                  <span>文件上传下载</span>
-                </div>
-              </template>
-                <div>
-                  <el-upload
-                        action="http://localhost:8080/file/upload"
-                        :headers="{token: user.data.token}"
-                        list-type="picture"
-                        :on-success="handleFileUpload"
-                    >
-                      <el-button type="primary">单文件上传</el-button>
-                      <template #tip>
-                        <div class="el-upload__tip">
-                          jpg/png files with a size less than 500KB.
-                        </div>
-                      </template>
-                  </el-upload>
-
-                  <el-upload
-                      action="http://localhost:8080/file/upload"
-                      :headers="{token: user.data.token}"
-                      :on-success="handleMultipleFileUpload"
-                      multiple
-                  >
-                    <el-button type="primary">多文件上传</el-button>
-                    <template #tip>
-                      <div class="el-upload__tip">
-                        jpg/png files with a size less than 500KB.
-                      </div>
-                    </template>
-                  </el-upload>
-                </div>
-
-            </el-card>
-          </div>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>

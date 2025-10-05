@@ -1,16 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Manager from '../views/Manager.vue'
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
+import error from "@/views/404.vue";
 
 const router = createRouter({
-    // Vue CLI 创建的 Vue 3 项目使用 process.env
     history: createWebHistory(process.env.BASE_URL),
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: HomeView
+            name: 'Manager',
+            component: Manager,
+            redirect:'home',
+            children:[
+                { path:'home', name:'HomeView', component:()=>import('../views/manager/HomeView.vue')},
+                { path:'user', name:'User', component:()=>import('../views/manager/User.vue')},
+                { path:'403', name:'Auth', component:()=>import('../views/manager/Auth.vue')}
+            ]
         },
         {
             path:'/login',
@@ -21,8 +27,36 @@ const router = createRouter({
             path:'/register',
             name:'Register',
             component: Register
+        },
+        {
+            path:'/:pathMatch(.*)*',
+            name:'404',
+            component: error
         }
     ]
 })
+router.beforeEach((to, from, next) => {
+    const adminPath = ['/user']  // 管理员才能访问的路径
+    const userStr = localStorage.getItem('honey-user')
+    const user = userStr ? JSON.parse(userStr) : null  // 更严谨的解析方式
+
+    // 1. 未登录状态（没有用户信息）
+    if (!user) {
+        // 如果要去的不是登录页，就重定向到登录页
+        if (to.path !== '/login' && to.path !== '/register') {
+            next('/login')
+            return  // 终止后续逻辑
+        }
+    }
+    // 2. 已登录状态但权限不足
+    else if (user.data?.role !== '管理员' && adminPath.includes(to.path)) {
+        next('/403')  // 跳转到无权限页面
+        return  // 终止后续逻辑
+    }
+
+    // 3. 正常情况，继续访问
+    next()
+})
+
 
 export default router

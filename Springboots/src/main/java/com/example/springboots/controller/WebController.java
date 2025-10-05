@@ -31,7 +31,7 @@ public class WebController {
 
     @PostMapping("/register")
     public Result register(@RequestBody User user) {
-        if(user.getUsername()==null || user.getUsername().isEmpty()){
+        if(user.getUsername()==null || user.getUsername().isEmpty() || user.getRole().isEmpty()){
             return Result.error("数据输入不合法");
         }
         if(user.getUsername().length()>10 || user.getPassword().length()>20){
