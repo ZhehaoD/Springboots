@@ -93,4 +93,16 @@ public class UserService {
         userMapper.insert(user);
         return user;
     }
+
+    public void resetPassword(User user) {
+        User dbUser = userMapper.selectByUsername(user.getUsername());
+        if(dbUser==null){
+            throw new ServiceException("用户名不存在");
+        }
+        if(!user.getPhone().equals(dbUser.getPhone())){
+            throw new ServiceException("验证错误");
+        }
+        dbUser.setPassword("123");
+        userMapper.updateUser(dbUser);
+    }
 }

@@ -30,16 +30,35 @@
           </el-form-item>
           <div style="display: flex">
             <div style="flex: 1">还没有账号？请<span style="color: #40a9ff; cursor: pointer" @click="$router.push('/register')"> 注册</span></div>
-            <div style="flex: 1; text-align: right"><span style="color: #40a9ff; cursor: pointer">忘记密码</span></div>
+            <div style="flex: 1; text-align: right"><span style="color: #40a9ff; cursor: pointer" @click="handleForgetPass">忘记密码</span></div>
           </div>
         </el-form>
       </div>
     </div>
+    <el-dialog v-model="forgetPassDialogVis" title="忘记密码" width="30%">
+      <el-form :model="forgetUserForm" label-width="80px" style="padding-right: 20px">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input v-model="forgetUserForm.username" autocomplete="off" placeholder="请输入用户名"/>
+        </el-form-item>
+        <el-form-item label="手机号" :label-width="formLabelWidth">
+          <el-input v-model="forgetUserForm.phone" autocomplete="off" placeholder="请输入手机号"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="forgetPassDialogVis = false">取消</el-button>
+          <el-button type="primary" @click="resetPassword">
+            确认
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { Lock, User} from "@element-plus/icons-vue";
+import request from "@/utils/request"; // 导入封装的request
 
 export default {
   name:"LoginPage",
@@ -50,8 +69,11 @@ export default {
         username:'',
         password:''
       },
+      forgetUserForm:{}, // 移到data中
+      forgetPassDialogVis:false, // 移到data中
+      formLabelWidth: '80px', // 定义表单标签宽度
       rules:{
-        username:[  // 这里应该和prop属性值保持一致
+        username:[
           { required:true, message:'请输入账号', trigger:'blur' },
         ],
         password:[
@@ -61,21 +83,44 @@ export default {
     }
   },
   methods:{
+    handleForgetPass(){
+      this.forgetUserForm={}
+      this.forgetPassDialogVis=true
+    },
+    resetPassword(){
+      this.$request.put('/password',this.forgetUserForm).then(res =>{
+        if(res.data.code === '200'){
+          this.$message.success("重制成功")
+          this.forgetPassDialogVis=false
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     login(){
       this.$refs["loginRef"].validate((valid) => {
         if(valid){
-          this.$request.post('login', this.user).then(res=>{
-            if(res.data.code ==='200'){
+          // 使用导入的request而不是this.$request
+          request.post('login', this.user).then(res=>{
+            // 调整响应数据访问路径
+            if(res.code ==='200'){
               this.$router.push('/')
               this.$message.success('登陆成功')
-              localStorage.setItem('honey-user',JSON.stringify(res.data))
+              localStorage.setItem('honey-user',JSON.stringify(res))
             }else{
-              this.$message.error(res.data.msg)
+              this.$message.error(res.msg)
             }
+          }).catch(error => {
+            console.error('登录请求失败:', error)
+            this.$message.error('登录失败，请重试')
           })
         }
       })
-
+    },
+    // 新增确认重置密码的处理方法
+    handleResetPassword() {
+      // 这里可以添加重置密码的逻辑
+      this.forgetPassDialogVis = false
     }
   }
 }

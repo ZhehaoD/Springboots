@@ -53,7 +53,7 @@
             <el-dropdown>
               <div style="display: flex; align-items: center; justify-content: end;">
                 <img
-                    :src="user.data.avatar"
+                    :src="user.data.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
                     style="width: 40px; height: 40px; cursor: default; border-radius: 50%; margin: 0 10px"
                 alt="用户头像"
                 >

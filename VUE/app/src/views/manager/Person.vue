@@ -81,14 +81,14 @@ export default {
   font-weight: bold;
 }
 
-.avatar-uploader .avatar {
+:deep(.avatar-uploader .avatar) {
   width: 178px;
   height: 178px;
   display: block;
   border-radius: 50%;
 }
 
-avatar-uploader .el-upload {
+:deep(.avatar-uploader .el-upload ){
   border: 1px dashed var(--el-border-color);
   cursor: pointer;
   position: relative;
@@ -98,11 +98,11 @@ avatar-uploader .el-upload {
 
 }
 
-.avatar-uploader .el-upload:hover {
+:deep(.avatar-uploader .el-upload:hover) {
   border-color: var(--el-color-primary);
 }
 
-.el-icon.avatar-uploader-icon {
+:deep(.el-icon.avatar-uploader-icon) {
   font-size: 28px;
   color: #8c939d;
   width: 178px;

@@ -1,6 +1,7 @@
 package com.example.springboots.controller;
 
 
+import com.example.springboots.common.AuthAccess;
 import com.example.springboots.common.Result;
 import com.example.springboots.entity.User;
 import com.example.springboots.service.UserService;
@@ -38,6 +39,16 @@ public class WebController {
             return Result.error("数据输入不合法");
         }
         user = userService.register(user);
+        return Result.success(user);
+    }
+
+    @AuthAccess
+    @PutMapping ("/password")
+    public Result password(@RequestBody User user) {
+        if(user.getUsername()==null || user.getPhone()==null){
+            return Result.error("数据输入不合法");
+        }
+        userService.resetPassword(user);
         return Result.success(user);
     }
 }
