@@ -62,7 +62,7 @@
               <template v-slot:dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="$router.push('/person')">个人信息</el-dropdown-item>
-                  <el-dropdown-item>修改密码</el-dropdown-item>
+                  <el-dropdown-item @click="$router.push('/password')">修改密码</el-dropdown-item>
                   <el-dropdown-item @click='logout'>退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
