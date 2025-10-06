@@ -53,15 +53,15 @@
             <el-dropdown>
               <div style="display: flex; align-items: center; justify-content: end;">
                 <img
-                    src="@/assets/logo.webp"
-                    style="width: 40px; height: 40px; cursor: default"
+                    :src="user.data.avatar"
+                    style="width: 40px; height: 40px; cursor: default; border-radius: 50%; margin: 0 10px"
                 alt="用户头像"
                 >
                 <span>{{user.data.name}}</span>
               </div>
               <template v-slot:dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>个人信息</el-dropdown-item>
+                  <el-dropdown-item @click="$router.push('/person')">个人信息</el-dropdown-item>
                   <el-dropdown-item>修改密码</el-dropdown-item>
                   <el-dropdown-item @click='logout'>退出登录</el-dropdown-item>
                 </el-dropdown-menu>
@@ -72,7 +72,7 @@
 
         <!-- 主体区域 -->
         <el-main>
-          <router-view></router-view>
+          <router-view @update:user = "updateUser"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -81,7 +81,6 @@
 
 <script>
 import {House, Menu,Expand,Fold,FullScreen} from "@element-plus/icons-vue";
-import request from '@/utils/request';
 
 export default ({
   name:"HomeView",
@@ -89,20 +88,12 @@ export default ({
     return {
       isCollapse:false,
       asideWidth:'200px',
-      users:[],
       user:JSON.parse(localStorage.getItem('honey-user') || '{}'),
-      URL:'',
-      URLS:[]
     }
   },
-  mounted() {
-    request.get('user/selectAll').then(res=>{
-      this.users = res.data
-    })
-  },
   methods:{
-    preview(url){
-      window.open(url)
+    updateUser(user){
+      this.user = JSON.parse(JSON.stringify(user))
     },
     handleFull(){
       document.documentElement.requestFullscreen()
@@ -115,27 +106,6 @@ export default ({
       localStorage.removeItem('honey-user')
       this.$router.push('/login')
     },
-    handleFileUpload(response, file, fileList){
-      this.fileList = fileList
-      console.log(fileList)
-
-    },
-    handleTableFileUpload(row, file){
-      row.avatar = file.response.data
-      request.put('/user/update',row).then(res => {
-        if (res.code ==='200'){
-          this.$message.success('上传成功')
-        }else{
-          this.$message.error('上传失败')
-        }
-      })
-    },
-    handleMultipleFileUpload(response, file, fileList){
-      this.urls = fileList.map(v=>v.response?.data)
-    },
-    showUrls(){
-      console.log(this.urls)
-    }
   },
   components: {Menu, House,Expand,Fold,FullScreen}
 })
