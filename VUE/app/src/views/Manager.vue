@@ -44,8 +44,8 @@
           </el-icon>
 
           <el-breadcrumb style="margin-left: 20px">
-            <el-breadcrumb-item :to="{path:'/'}">首页</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/user'}">用户管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{path:'/'}">系统首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{path: $route.path}">{{$route.meta.name}}</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex: 1; width: 0; display: flex; align-items: center; justify-content: end;">
@@ -90,6 +90,8 @@ export default ({
       asideWidth:'200px',
       user:JSON.parse(localStorage.getItem('honey-user') || '{}'),
     }
+  },
+  mounted() {
   },
   methods:{
     updateUser(user){

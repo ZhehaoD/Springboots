@@ -13,26 +13,31 @@ const router = createRouter({
             component: Manager,
             redirect:'home',
             children:[
-                { path:'home', name:'HomeView', component:()=>import('../views/manager/HomeView.vue')},
-                { path:'user', name:'User', component:()=>import('../views/manager/User.vue')},
-                { path:'403', name:'Auth', component:()=>import('../views/manager/Auth.vue')},
-                { path:'person', name:'Person', component:()=>import('../views/manager/Person.vue')}
+                { path:'home', meta:{name:'系统首页'},name:'HomeView', component:()=>import('../views/manager/HomeView.vue')},
+                { path:'user', meta:{name:'用户信息'},name:'User', component:()=>import('../views/manager/User.vue')},
+                { path:'403', meta:{name:'无权限'}, name:'Auth', component:()=>import('../views/manager/Auth.vue')},
+                { path:'person', meta:{name:'个人信息'}, name:'Person', component:()=>import('../views/manager/Person.vue')}
             ]
         },
         {
             path:'/login',
             name:'Login',
-            component: Login
+            component: Login,
+            meta:{name:'登陆'},
         },
         {
             path:'/register',
             name:'Register',
-            component: Register
+            component: Register,
+            meta:{name:'注册'},
+
         },
         {
             path:'/:pathMatch(.*)*',
             name:'404',
-            component: error
+            component: error,
+            meta:{name:'无法访问'},
+
         }
     ]
 })
