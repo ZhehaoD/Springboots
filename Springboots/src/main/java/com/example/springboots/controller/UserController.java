@@ -120,6 +120,10 @@ public class UserController {
             return Result.error("请选择要删除的用户");
         }
         // 2. 调用 Service 批量删除
+        User currentUser = TokenUtils.getCurrentUser();
+        if(currentUser !=null && ids.contains(currentUser.getId()) && currentUser.getId() != null){
+            throw new ServiceException("不能删除当前的用户");
+        }
         boolean batchDeleteSuccess = userService.removeBatchByIds(ids);
         if (batchDeleteSuccess) {
             return Result.success("批量删除成功");
