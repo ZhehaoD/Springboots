@@ -82,6 +82,11 @@
             <version>3.0.5</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.5</version> <!-- 3.5.3+ 版本支持 Spring Boot 3.x -->
+        </dependency>
     </dependencies>
 
     <build>

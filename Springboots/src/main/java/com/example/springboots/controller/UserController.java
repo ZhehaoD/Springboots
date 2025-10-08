@@ -1,7 +1,10 @@
 package com.example.springboots.controller;
 
 
-import com.example.springboots.common.Page;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboots.common.Result;
 import com.example.springboots.entity.User;
 import com.example.springboots.service.UserService;
@@ -22,64 +25,50 @@ public class UserController
 
     @PostMapping("/add")
     public Result add(@RequestBody User user){
-        userService.insertUser(user);
+        userService.save(user);
         return Result.success();
     }
 
     @PutMapping ("/update")
     public Result update(@RequestBody User user){
-        userService.updateUser(user);
+        userService.updateById(user);
         return Result.success();
     }
 
     @DeleteMapping ("/delete/{id}")
     public Result delete(@PathVariable Integer id){
-        userService.deleteUser(id);
+        userService.removeById(id);
         return Result.success();
     }
 
     @DeleteMapping ("/delete/batch")
     public Result batchDelete(@RequestBody List<Integer> ids){
-        userService.batchDeleteUser(ids);
+        userService.removeBatchByIds(ids);
         return Result.success();
     }
 
     @GetMapping ("/selectAll")
     public Result selectAll(){
-        List<User> userList = userService.selectAll();
+        List<User> userList = userService.list(new QueryWrapper<User>().orderByAsc("id"));
         return Result.success(userList);
     }
 
     @GetMapping ("/selectByID/{id}")
     public Result selectByID(@PathVariable Integer id){
-        User user = userService.selectByID(id);
+        User user = userService.getById(id);
         return Result.success(user);
     }
 
-    @GetMapping ("/selectByName/{name}")
-    public Result selectByName(@PathVariable String name){
-        List<User> user = userService.selectByName(name);
-        return Result.success(user);
-    }
-
-    @GetMapping ("/selectByMore")
-    public Result selectByMore(@RequestParam String username, @RequestParam String name){
-        List<User> userList = userService.selectByMore(username,name);
-        return Result.success(userList);
-    }
-
-    @GetMapping ("/selectByMo")
-    public Result selectByMo(@RequestParam String username, @RequestParam String name){
-        List<User> userList = userService.selectByMo(username,name);
-        return Result.success(userList);
-    }
 
     @GetMapping ("/selectByPage")
     public Result selectByPage(@RequestParam Integer pageNum,
                                @RequestParam Integer pageSize,
                                @RequestParam String username,
                                @RequestParam String name){
-        userService.selectByPage(pageNum, pageSize, username, name);
-        return Result.success();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().orderByAsc("id");
+        queryWrapper.like(StrUtil.isNotBlank(username),"username",username);
+        queryWrapper.like(StrUtil.isNotBlank(name),"name",name);
+        Page<User> page = userService.page(new Page<>(pageNum, pageSize), queryWrapper);
+        return Result.success(page);
     }
 }

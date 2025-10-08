@@ -1,77 +1,31 @@
 package com.example.springboots.service;
 
 
-import ch.qos.logback.core.testUtil.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboots.common.AuthAccess;
-import com.example.springboots.common.Page;
 import com.example.springboots.entity.User;
 import com.example.springboots.exception.ServiceException;
 import com.example.springboots.mapper.UserMapper;
 import com.example.springboots.utils.TokenUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
 
 @Service
-public class UserService {
-    @Autowired
+public class UserService extends ServiceImpl<UserMapper,User> {
+    @Resource
     UserMapper userMapper;
-
-    public void insertUser(User user){
-        userMapper.insert(user);
+    public User selectByUsername(String username){
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username); // eq=>== where username = #{username}
+        return getOne(queryWrapper); // select * from user where username =#{username}
     }
 
-    public void updateUser(User user){
-        userMapper.updateUser(user);
-    }
-
-    public void deleteUser(Integer id) {
-        userMapper.deleteUser(id);
-    }
-
-    public void batchDeleteUser(List<Integer> ids) {
-        for(Integer id:ids){
-            userMapper.deleteUser(id);
-        }
-    }
-
-    public List<User> selectAll() {
-        return userMapper.selectAll();
-    }
-
-    public User selectByID(Integer id) {
-        return userMapper.selectByID(id);
-    }
-
-    public List<User> selectByName(String name) {
-        return userMapper.selectByName(name);
-    }
-
-    public List<User> selectByMore(String username, String name) {
-        return userMapper.selectByMore(username,name);
-    }
-
-    public List<User> selectByMo(String username, String name) {
-        return userMapper.selectByMo(username,name);
-    }
-
-    public Page<User> selectByPage(Integer pageNum, Integer pageSize, String username, String name) {
-        Integer skipNum = (pageNum-1) * pageSize;
-
-        Page<User> page = new Page<>();
-        List<User> userList = userMapper.selectByPage(skipNum,pageSize,username,name);
-        Integer total = userMapper.selectCountByPage(username,name);
-        page.setTotal(total);
-        page.setList(userList);
-        return page;
-    }
     @AuthAccess
     public User login(User user) {
         //根据用户名查询数据库的用户信息
-        User dbUser = userMapper.selectByUsername(user.getUsername());
+        User dbUser = selectByUsername(user.getUsername());
         if(dbUser==null){
             throw new ServiceException("用户名或密码错误");
         }
@@ -85,7 +39,7 @@ public class UserService {
     }
 
     public User register(User user) {
-        User dbUser = userMapper.selectByUsername(user.getUsername());
+        User dbUser = selectByUsername(user.getUsername());
         if(dbUser != null){
             throw new ServiceException("用户名已存在");
         }
@@ -95,7 +49,7 @@ public class UserService {
     }
 
     public void resetPassword(User user) {
-        User dbUser = userMapper.selectByUsername(user.getUsername());
+        User dbUser = selectByUsername(user.getUsername());
         if(dbUser==null){
             throw new ServiceException("用户名不存在");
         }
@@ -103,6 +57,6 @@ public class UserService {
             throw new ServiceException("验证错误");
         }
         dbUser.setPassword("123");
-        userMapper.updateUser(dbUser);
+        updateById(dbUser);
     }
 }
