@@ -1,17 +1,30 @@
 package com.example.springboots.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboots.common.Result;
 import com.example.springboots.entity.User;
 import com.example.springboots.exception.ServiceException;
 import com.example.springboots.service.UserService;
 import com.example.springboots.utils.TokenUtils;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户管理控制器
@@ -45,7 +58,6 @@ public class UserController {
         User dbUser = userService.selectByUsername(user.getUsername());
         if(dbUser!=null){
             throw new ServiceException("用户名已存在");
-
         }
         // 3. 调用 Service 保存用户（MyBatis-Plus 自带的 save 方法）
         boolean saveSuccess = userService.save(user);
@@ -186,5 +198,62 @@ public class UserController {
 
         // 3. 返回分页结果（包含总条数、当前页数据等）
         return Result.success(userPage);
+    }
+
+    @GetMapping("/export")
+    public void exportData( @RequestParam(required = false) String username,  // 非必填：用户名搜索
+                            @RequestParam(required = false) String name,
+                            @RequestParam(required = false) String ids,
+                            HttpServletResponse response) throws IOException {
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        List<User> list;
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+
+        if(StrUtil.isNotBlank(ids)){
+            List<Integer> idsArr1 = Arrays.stream(ids.split(",")).map(Integer::valueOf).collect(Collectors.toList());
+            queryWrapper.in("id", idsArr1);
+        }else{
+            //全部导出
+            queryWrapper.like(StrUtil.isNotBlank(username), "username", username);//条件查询器
+            queryWrapper.like(StrUtil.isNotBlank(name), "name", name);
+        }
+        list = userService.list(queryWrapper);
+        writer.write(list,true);
+
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=user.xlsx" + URLEncoder.encode("用户信息表", "UTF-8") + ".xlsx");
+
+        ServletOutputStream outputStream = response.getOutputStream();
+        writer.flush(outputStream,true);
+        writer.close();
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    @PostMapping("import")
+    public Result importData( MultipartFile file)throws IOException {
+        ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
+        List<User> userList = reader.readAll(User.class);
+        List<String> excelUsernames = userList.stream()
+                .map(User::getUsername) // 提取用户名列表
+                .collect(Collectors.toList());
+        // 构造查询条件：查询数据库中“在 Excel 用户名列表中”的记录
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("username", excelUsernames); // in 条件：匹配多个用户名
+        List<User> dbExistUsers = userService.list(queryWrapper);
+        if (!CollectionUtils.isEmpty(dbExistUsers)) {
+            // 提取冲突的用户名，拼接成错误信息
+            String conflictUsernames = dbExistUsers.stream()
+                    .map(User::getUsername)
+                    .collect(Collectors.joining(","));
+            return Result.error("数据库中已存在以下用户名：" + conflictUsernames + "，请修改后重新导入");
+        }
+
+        try{
+            userService.saveBatch(userList);
+        }catch (Exception e){
+            return Result.error("导入出错");
+        }
+        return Result.success();
     }
 }

@@ -9,6 +9,10 @@
       <el-button type="primary" @click="handleAdd">新增</el-button>
       <el-button type="primary" @click="reset">重置</el-button>
       <el-button type="danger" @click="delBatch">批量删除</el-button>
+      <el-button type="info" @click="exportData">批量导出</el-button>
+      <el-upload action="http://localhost:8080/user/import" :headers="{token:user.data.token}" style="display: inline-block;margin-left: 10px" :show-file-list="false" :on-success="handleImport">
+        <el-button type="primary">批量导入</el-button>
+      </el-upload>
     </div>
     <el-table :data='tableData' stripe :header-cell-style="{backgroundColor:'aliceblue',color:'#333'}" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="30" align="center"></el-table-column>
@@ -119,6 +123,22 @@ export default ({
     this.load();
   },
   methods: {
+    handleImport(res){
+      if(res.code ==='200'){
+        this.$message.success('操作成功')
+        this.load(1)
+      }else{
+        this.$message.error(res.msg)
+      }
+    },
+    exportData(){
+      if(!this.ids.length){
+        window.open('http://localhost:8080/user/export?token=' + this.user.data.token + "&usernsme=" + this.username + "&name=" + this.name)
+      }else{
+        let idStr = this.ids.join(',')
+        window.open('http://localhost:8080/user/export?token=' + this.user.data.token +"&ids=" + idStr)
+      }
+    },
     delBatch(){
       if(!this.ids.length){
         this.$message.warning('请选择数据')
