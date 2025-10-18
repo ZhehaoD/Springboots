@@ -6,7 +6,7 @@ import ElementPlus from 'element-plus'
 // 引入 Element Plus 样式
 import 'element-plus/dist/index.css'
 import axios from "axios";
-
+import 'highlight.js/styles/monokai-sublime.css'
 // 配置 axios - 后端运行在8080端口
 axios.defaults.withCredentials = true;
 

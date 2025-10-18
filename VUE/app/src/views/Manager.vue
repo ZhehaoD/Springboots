@@ -15,7 +15,7 @@
           <img src="@/assets/logo.webp" style="width: 40px; height: 40px">
           <span class="logo" v-show="!isCollapse">honey2025</span>
         </div>
-        <el-menu  :collapse="isCollapse" :collapse-transition="false" router style="border: none" :default-active="$route.path" background-color="#001529" text-color="rgba(255,255,255,0.65)" active-text-color="#fff" >
+        <el-menu  :default-openeds="['info']" :collapse="isCollapse" :collapse-transition="false" router style="border: none" :default-active="$route.path" background-color="#001529" text-color="rgba(255,255,255,0.65)" active-text-color="#fff" >
           <el-menu-item index="/home">
             <el-icon><House /></el-icon>
             <span>系统首页</span>
@@ -27,6 +27,7 @@
               <span>信息管理</span>
             </template>
             <el-menu-item  index="/user">用户信息</el-menu-item>
+            <el-menu-item  index="/news">新闻信息</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>

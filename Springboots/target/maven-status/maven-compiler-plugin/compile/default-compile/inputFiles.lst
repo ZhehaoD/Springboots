@@ -1,9 +1,11 @@
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/CorsConfig.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/SpringbootsApplication.java
+/Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/common/AuthAccess.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/common/InterceptorConfig.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/common/JwtInterceptor.java
-/Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/common/Page.java
+/Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/common/MybatisPlusConfig.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/common/Result.java
+/Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/controller/FileController.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/controller/UserController.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/controller/WebController.java
 /Users/zen/Desktop/test/Springboots/Springboots/src/main/java/com/example/springboots/entity/User.java
