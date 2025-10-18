@@ -18,7 +18,8 @@ const router = createRouter({
                 { path:'403', meta:{name:'无权限'}, name:'Auth', component:()=>import('../views/manager/Auth.vue')},
                 { path:'person', meta:{name:'个人信息'}, name:'Person', component:()=>import('../views/manager/Person.vue')},
                 { path:'password', meta:{name:'修改密码'}, name:'Password', component:()=>import('../views/manager/Password.vue')},
-                { path:'News', meta:{name:'新闻信息'}, name:'News', component:()=>import('../views/manager/News')}
+                { path:'News', meta:{name:'新闻信息'}, name:'News', component:()=>import('../views/manager/News')},
+                { path:'notice', meta:{name:'系统公告'}, name:'Notice', component:()=>import('../views/manager/Notice')}
             ]
         },
         {

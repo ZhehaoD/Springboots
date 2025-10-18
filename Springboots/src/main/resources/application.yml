@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${ip}:5432/springtest
+    url: jdbc:postgresql://${ip}:5432/springtest?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
     username: postgres
     password: dzh123
     driver-class-name: org.postgresql.Driver
