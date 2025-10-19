@@ -6,6 +6,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboots.common.AuthAccess;
+import com.example.springboots.common.HoneyLogs;
+import com.example.springboots.common.LogType;
 import com.example.springboots.common.Result;
 import com.example.springboots.entity.News;
 import com.example.springboots.entity.User;
@@ -36,6 +38,7 @@ public class NewsController {
      * 新增用户（含默认值填充）
      * 解决原代码中“重写 save 方法”的语法错误，将默认值逻辑整合到新增接口中
      */
+    @HoneyLogs(operation = "新闻", type = LogType.ADD)
     @PostMapping("/add")
     public Result add(@RequestBody News news) {
         User currentUser = TokenUtils.getCurrentUser();
@@ -49,12 +52,14 @@ public class NewsController {
      * 修改用户信息
      * 修复：新增“用户存在性校验”，避免修改不存在的用户
      */
+    @HoneyLogs(operation = "新闻", type = LogType.UPDATE)
     @PutMapping("/update")
     public Result update(@RequestBody News news) {
        newsService.updateById(news);
        return Result.success();
     }
 
+    @HoneyLogs(operation = "新闻", type = LogType.DELETE)
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
         newsService.removeById(id);
@@ -64,6 +69,7 @@ public class NewsController {
     /**
      * 批量删除用户
      */
+    @HoneyLogs(operation = "新闻", type = LogType.BATCH_DELETE)
     @DeleteMapping("/delete/batch")
     public Result batchDelete(@RequestBody List<Integer> ids) {
         newsService.removeBatchByIds(ids);

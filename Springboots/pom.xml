@@ -92,6 +92,12 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <!-- 无需指定版本，会继承自 spring-boot-starter-parent 中的版本 -->
+        </dependency>
     </dependencies>
 
     <build>

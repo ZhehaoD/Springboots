@@ -7,6 +7,8 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboots.common.HoneyLogs;
+import com.example.springboots.common.LogType;
 import com.example.springboots.common.Result;
 import com.example.springboots.entity.User;
 import com.example.springboots.exception.ServiceException;
@@ -42,6 +44,7 @@ public class UserController {
      * 新增用户（含默认值填充）
      * 解决原代码中“重写 save 方法”的语法错误，将默认值逻辑整合到新增接口中
      */
+    @HoneyLogs(operation = "用户", type = LogType.ADD)
     @PostMapping("/add")
     public Result add(@RequestBody User user) {
         // 1. 校验必填参数（用户名不能为空）
@@ -72,6 +75,7 @@ public class UserController {
      * 修改用户信息
      * 修复：新增“用户存在性校验”，避免修改不存在的用户
      */
+    @HoneyLogs(operation = "用户", type = LogType.UPDATE)
     @PutMapping("/update")
     public Result update(@RequestBody User user) {
         // 1. 校验用户ID（修改必须指定ID）
@@ -98,6 +102,7 @@ public class UserController {
     /**
      * 单个删除用户
      */
+    @HoneyLogs(operation = "用户", type = LogType.DELETE)
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
         // 1. 校验ID
@@ -125,6 +130,7 @@ public class UserController {
     /**
      * 批量删除用户
      */
+    @HoneyLogs(operation = "用户", type = LogType.BATCH_DELETE)
     @DeleteMapping("/delete/batch")
     public Result batchDelete(@RequestBody List<Integer> ids) {
         // 1. 校验ID列表

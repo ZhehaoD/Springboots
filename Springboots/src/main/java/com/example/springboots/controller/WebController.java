@@ -2,6 +2,8 @@ package com.example.springboots.controller;
 
 
 import com.example.springboots.common.AuthAccess;
+import com.example.springboots.common.HoneyLogs;
+import com.example.springboots.common.LogType;
 import com.example.springboots.common.Result;
 import com.example.springboots.entity.User;
 import com.example.springboots.service.UserService;
@@ -21,6 +23,7 @@ public class WebController {
         return Result.success("success");
     }
 
+    @HoneyLogs(operation = "用户", type = LogType.LOGIN)
     @PostMapping("/login")
     public Result login(@RequestBody User user) {
         if(user.getUsername()==null || user.getUsername().isEmpty()){
@@ -30,6 +33,7 @@ public class WebController {
         return Result.success(user);
     }
 
+    @HoneyLogs(operation = "用户", type = LogType.REGISTER)
     @PostMapping("/register")
     public Result register(@RequestBody User user) {
         if(user.getUsername()==null || user.getUsername().isEmpty() || user.getRole().isEmpty()){
@@ -43,6 +47,7 @@ public class WebController {
     }
 
     @AuthAccess
+    @HoneyLogs(operation = "用户", type = LogType.UPDATE)
     @PutMapping ("/password")
     public Result password(@RequestBody User user) {
         if(user.getUsername()==null || user.getPhone()==null){

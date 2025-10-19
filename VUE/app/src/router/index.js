@@ -19,7 +19,8 @@ const router = createRouter({
                 { path:'person', meta:{name:'个人信息'}, name:'Person', component:()=>import('../views/manager/Person.vue')},
                 { path:'password', meta:{name:'修改密码'}, name:'Password', component:()=>import('../views/manager/Password.vue')},
                 { path:'News', meta:{name:'新闻信息'}, name:'News', component:()=>import('../views/manager/News')},
-                { path:'notice', meta:{name:'系统公告'}, name:'Notice', component:()=>import('../views/manager/Notice')}
+                { path:'notice', meta:{name:'系统公告'}, name:'Notice', component:()=>import('../views/manager/Notice')},
+                { path:'logs', meta:{name:'系统日志'}, name:'Logs', component:()=>import('../views/manager/Logs')}
             ]
         },
         {
