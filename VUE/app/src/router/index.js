@@ -20,7 +20,9 @@ const router = createRouter({
                 { path:'password', meta:{name:'修改密码'}, name:'Password', component:()=>import('../views/manager/Password.vue')},
                 { path:'News', meta:{name:'新闻信息'}, name:'News', component:()=>import('../views/manager/News')},
                 { path:'notice', meta:{name:'系统公告'}, name:'Notice', component:()=>import('../views/manager/Notice')},
-                { path:'logs', meta:{name:'系统日志'}, name:'Logs', component:()=>import('../views/manager/Logs')}
+                { path:'logs', meta:{name:'系统日志'}, name:'Logs', component:()=>import('../views/manager/Logs')},
+                { path:'charts', meta:{name:'图标统计'}, name:'Charts', component:()=>import('../views/manager/Charts')},
+                { path:'orders', meta:{name:'订单管理'}, name:'Orders', component:()=>import('../views/manager/Orders')}
             ]
         },
         {
